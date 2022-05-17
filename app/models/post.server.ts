@@ -15,7 +15,6 @@ export async function createPost(post:Pick<Post, "slug" | "title" | "markdown">)
 }
 
 export async function editPost(post:Pick<Post, "slug" | "title" | "markdown">) {
-  console.log("editPost", post);
   return await prisma.post.update({
     where: {
       slug: post.slug

@@ -2,9 +2,9 @@ import type { LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getPost } from "~/models/post.server";
-import type { Post } from "~/models/post.server";
 import invariant from "tiny-invariant";
 import { marked } from "marked";
+import { Post } from "@prisma/client";
 type LoaderData = { post: Post, html:string };
 
 export const loader: LoaderFunction = async ({

@@ -21,13 +21,12 @@ export const loader: LoaderFunction = async ({
   invariant(params.slug, `params.slug is required`);
   const post = await getPost(params.slug);
   invariant(post, `Post not found: ${params.slug}`);
-
+  //console.log("RAN LOADER", post);
   return json<LoaderData>({ post });
 };
 
 
 export const action:ActionFunction = async ({ request }) => {
-
   await new Promise(resolve => setTimeout(resolve, 2000));
   const formData = await request.formData();
 
@@ -61,16 +60,17 @@ export const action:ActionFunction = async ({ request }) => {
     typeof markdown === "string",
     "markdown must be a string"
   );
+  console.log("*** about to edit", title, slug, markdown);
   await editPost({ title, slug, markdown });
 
   return redirect("/posts/admin");
 };
 
-
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
 
 export default function EditPost() {
     const { post } = useLoaderData() as LoaderData;
+    //console.info("*** editPost render", post);
     const transition = useTransition();
     const isEditing = Boolean(transition.submission);
     const errors = useActionData();
@@ -79,6 +79,9 @@ export default function EditPost() {
     <>
     <h2 className="my-6 mb-6 border-b-2 text-center text-2xl">Editing: {post.slug}</h2>
     <Form method="post">
+     <p>
+        <input name="slug" type="hidden" value={post.slug} />
+     </p>
       <p>
         <label>
           Post Title:{" "}
@@ -105,8 +108,8 @@ export default function EditPost() {
           id="markdown"
           rows={20}
           name="markdown"
-          className={`${inputClassName} font-mono`}
           defaultValue={post.markdown}
+          className={`${inputClassName} font-mono`}
         />
       </p>
       <p className="text-right">
